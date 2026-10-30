@@ -182,15 +182,15 @@ func (logger *Logger) genericLog(level LevelEnum, format string, args []any) (er
 // Never prints to syslog.
 func (logger *Logger) HttpRequest(
 	request *http.Request,
-	request_start time.Time,
-	response_code int,
+	requestStart time.Time,
+	responseCode int,
 ) error {
 	return logger.printer.
 		Lock().
 		Colored(ColorBrightWhite, logger.name).
 		Colored(ColorBrightBlack, time.Now().Format(" 2006/01/02 15:04:05 ")).
-		Coloredf(httpStatusCodeColor(response_code), "%6d ", response_code).
-		Coloredf(ColorBrightBlack, "| %-6s | ", time.Since(request_start).Round(100*time.Millisecond)).
+		Coloredf(httpStatusCodeColor(responseCode), "%6d ", responseCode).
+		Coloredf(ColorBrightBlack, "| %-6s | ", time.Since(requestStart).Round(100*time.Millisecond)).
 		Writef("%s %q\n", request.Method, request.URL).
 		Unlock().
 		ErrorsJoined()
