@@ -8,11 +8,11 @@ import (
 // Resets any formatting
 const AnsiReset = "\x1b[0m"
 
-type colorCodeEnum uint8
+type ColorCodeEnum uint8
 
 // 3-bit ANSI colors
 const (
-	ColorBlack colorCodeEnum = iota
+	ColorBlack ColorCodeEnum = iota
 	ColorRed
 	ColorGreen
 	ColorYellow
@@ -24,7 +24,7 @@ const (
 
 // 4-bit ANSI colors
 const (
-	ColorBrightBlack colorCodeEnum = iota + 60
+	ColorBrightBlack ColorCodeEnum = iota + 60
 	ColorBrightRed
 	ColorBrightGreen
 	ColorBrightYellow
@@ -39,7 +39,7 @@ const (
 //   - Returns [AnsiReset] when no arguments.
 //   - Allows 1-2 arguments (set foreground & background).
 //   - Panics otherwise.
-func AnsiColor(colors ...colorCodeEnum) string {
+func AnsiColor(colors ...ColorCodeEnum) string {
 	switch len(colors) {
 	case 0:
 		return AnsiReset
@@ -90,7 +90,7 @@ func AnsiColorBg8(n uint8) string {
 	return fmt.Sprintf("\x1b[48;5;%dm", n)
 }
 
-func httpStatusCodeColor(code int) colorCodeEnum {
+func httpStatusCodeColor(code int) ColorCodeEnum {
 	if code >= 500 {
 		return ColorBrightRed
 	}

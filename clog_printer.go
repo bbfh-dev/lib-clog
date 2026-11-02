@@ -12,14 +12,14 @@ import (
 // Refer to [NewPrinter].
 type Printer struct {
 	file             *os.File
-	mode             outputModeEnum
+	mode             OutputModeEnum
 	mutex            sync.Mutex
 	errs             []error
 	useColoredOutput bool // cached
 }
 
 // NewPrinter creates a new wrapper around [os.File] with specific output mode.
-func NewPrinter(file *os.File, mode outputModeEnum) *Printer {
+func NewPrinter(file *os.File, mode OutputModeEnum) *Printer {
 	printer := &Printer{
 		file:  file,
 		mutex: sync.Mutex{},
@@ -53,7 +53,7 @@ func (printer *Printer) ErrorsJoined() error {
 	return errors.Join(printer.Errors()...)
 }
 
-func (printer *Printer) SetOutputMode(mode outputModeEnum) *Printer {
+func (printer *Printer) SetOutputMode(mode OutputModeEnum) *Printer {
 	printer.mode = mode
 	printer.useColoredOutput = printer.supportsColoredOutput()
 	return printer
@@ -117,17 +117,17 @@ func (printer *Printer) Styledln(ansi string, line string) *Printer {
 }
 
 // Colored is sugar code for [Printer.Styled].
-func (printer *Printer) Colored(color colorCodeEnum, text string) *Printer {
+func (printer *Printer) Colored(color ColorCodeEnum, text string) *Printer {
 	return printer.Styled(AnsiColor(color), text)
 }
 
 // Coloredf is sugar code for [Printer.Styledf].
-func (printer *Printer) Coloredf(color colorCodeEnum, format string, args ...any) *Printer {
+func (printer *Printer) Coloredf(color ColorCodeEnum, format string, args ...any) *Printer {
 	return printer.Styledf(AnsiColor(color), format, args...)
 }
 
 // Coloredln is sugar code for [Printer.Colored].
-func (printer *Printer) Coloredln(color colorCodeEnum, line string) *Printer {
+func (printer *Printer) Coloredln(color ColorCodeEnum, line string) *Printer {
 	return printer.Colored(color, line+"\n")
 }
 

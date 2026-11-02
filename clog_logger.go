@@ -61,11 +61,11 @@ func (level LevelEnum) AnsiColor() string {
 	}
 }
 
-type outputModeEnum uint8
+type OutputModeEnum uint8
 
 const (
 	// Do not insert any ANSI escape sequences
-	OutputPlain outputModeEnum = iota
+	OutputPlain OutputModeEnum = iota
 	// Use ANSI escape sequences for colored output
 	OutputColored
 	// Use ANSI escape sequences if the output is a terminal that supports ANSI
@@ -104,7 +104,7 @@ func (logger *Logger) SetLevel(level LevelEnum) *Logger {
 }
 
 // SetOutputMode changes the output color mode.
-func (logger *Logger) SetOutputMode(mode outputModeEnum) *Logger {
+func (logger *Logger) SetOutputMode(mode OutputModeEnum) *Logger {
 	logger.printer.SetOutputMode(mode)
 	return logger
 }
