@@ -19,6 +19,12 @@ func TestFormattingAuto(t *testing.T) {
 	logger.SetOutputMode(libclog.OutputColored)
 	print(t, logger)
 	logger.WithoutTimestamp().Info("This is without a timestamp")
+
+	other := libclog.NewLogger("", os.Stdout).
+		SetLevel(libclog.LogInfo).
+		SetOutputMode(libclog.OutputColored)
+	other.WithoutTimestamp().Info("Without name as well")
+	logger.WithoutTimestamp().Info("Mixed with this")
 }
 
 func TestConcurrency(t *testing.T) {

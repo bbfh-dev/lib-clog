@@ -204,9 +204,10 @@ func (logger *Logger) HttpRequest(
 }
 
 func (logger *Logger) write(level LevelEnum, message string) error {
-	logger.printer.
-		Lock().
-		Colored(ColorBrightWhite, logger.name)
+	logger.printer.Lock()
+	if logger.name != "" {
+		logger.printer.Colored(ColorBrightWhite, logger.name)
+	}
 	if logger.printTimestamp {
 		logger.printer.Colored(ColorBrightBlack, time.Now().Format(" 2006/01/02 15:04:05 "))
 	}
