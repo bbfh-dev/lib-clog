@@ -74,19 +74,21 @@ const (
 
 // Refer to [NewLogger]
 type Logger struct {
-	syslogWriter *syslog.Writer
-	level        LevelEnum
-	name         string
-	printer      *Printer
+	syslogWriter   *syslog.Writer
+	level          LevelEnum
+	name           string
+	printer        *Printer
+	printTimestamp bool
 }
 
 // NewLogger creates a new logger with default settings.
 func NewLogger(name string, out *os.File) *Logger {
 	return &Logger{
-		syslogWriter: nil,
-		level:        LogError,
-		name:         name,
-		printer:      NewPrinter(out, OutputAuto),
+		syslogWriter:   nil,
+		level:          LogError,
+		name:           name,
+		printer:        NewPrinter(out, OutputAuto),
+		printTimestamp: true,
 	}
 }
 
@@ -112,6 +114,11 @@ func (logger *Logger) SetOutputMode(mode OutputModeEnum) *Logger {
 // SetOutputFile changes the output file (could be [os.Stdout] or similar).
 func (logger *Logger) SetOutputFile(file *os.File) *Logger {
 	logger.printer.file = file
+	return logger
+}
+
+func (logger *Logger) WithoutTimestamp() *Logger {
+	logger.printTimestamp = false
 	return logger
 }
 
@@ -197,11 +204,13 @@ func (logger *Logger) HttpRequest(
 }
 
 func (logger *Logger) write(level LevelEnum, message string) error {
-	return logger.printer.
+	logger.printer.
 		Lock().
-		Colored(ColorBrightWhite, logger.name).
-		Colored(ColorBrightBlack, time.Now().Format(" 2006/01/02 15:04:05 ")).
-		Styledf(level.AnsiColor(), "% 6s", level.String()).
+		Colored(ColorBrightWhite, logger.name)
+	if logger.printTimestamp {
+		logger.printer.Colored(ColorBrightBlack, time.Now().Format(" 2006/01/02 15:04:05 "))
+	}
+	return logger.printer.Styledf(level.AnsiColor(), "% 6s", level.String()).
 		Colored(ColorBrightBlack, " | ").
 		Writeln(message).
 		Unlock().
