@@ -180,6 +180,9 @@ func (logger *Logger) genericLog(level LevelEnum, format string, args []any) (er
 				return err
 			}
 		}
+		if level == LogDebug && logger.printer.supportsColoredOutput() {
+			message = AnsiColor(ColorBrightBlack) + message + AnsiReset
+		}
 		err = logger.write(level, message)
 	}
 	return err
