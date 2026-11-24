@@ -42,6 +42,7 @@ func print(t *testing.T, logger *libclog.Logger) {
 	assert.NilError(t, logger.Trace("Something happened with id=%d", 123))
 	assert.NilError(t, logger.Debug("Something happened with id=%d", 123))
 	assert.NilError(t, logger.Info("Something happened with id=%d", 123))
+	assert.NilError(t, logger.Done("Something finished"))
 	assert.NilError(t, logger.Notice("Something happened with id=%d", 123))
 	assert.NilError(t, logger.Warn("Something happened with id=%d", 123))
 	assert.NilError(t, logger.Error("Something happened with id=%d", 123))

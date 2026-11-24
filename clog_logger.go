@@ -16,6 +16,7 @@ const (
 	LogFatal                        // Critical conditions (e.g. crash)
 	LogError                        // Error conditions (e.g. failed request)
 	LogWarning                      // Nothing has necessarily failed yet, but action may be needed to prevent failure
+	LogDone                         // Something noteworthy finished executing
 	LogNotice                       // A normal but significant event that may be worth recording
 	LogInfo                         // Routine status information with no problem indicated
 	LogDebug                        // Detailed diagnostic information intended for troubleshooting
@@ -30,6 +31,8 @@ func (level LevelEnum) String() string {
 		return "ERROR"
 	case LogWarning:
 		return "WARN"
+	case LogDone:
+		return "* DONE"
 	case LogNotice:
 		return "NOTICE"
 	case LogInfo:
@@ -52,6 +55,8 @@ func (level LevelEnum) AnsiColor() string {
 		return AnsiColor(ColorBrightRed)
 	case LogWarning:
 		return AnsiColor(ColorBrightYellow)
+	case LogDone:
+		return AnsiColor(ColorBrightGreen)
 	case LogNotice:
 		return AnsiColor(ColorBrightBlue)
 	case LogInfo:
@@ -137,6 +142,11 @@ func (logger *Logger) Warn(format string, args ...any) error {
 	return logger.genericLog(LogWarning, format, args)
 }
 
+// Done logs a message at the [LogDone] level.
+func (logger *Logger) Done(format string, args ...any) error {
+	return logger.genericLog(LogDone, format, args)
+}
+
 // Notice logs a message at the [LogNotice] level.
 func (logger *Logger) Notice(format string, args ...any) error {
 	return logger.genericLog(LogNotice, format, args)
@@ -169,7 +179,7 @@ func (logger *Logger) genericLog(level LevelEnum, format string, args []any) (er
 				err = logger.syslogWriter.Err(message)
 			case LogWarning:
 				err = logger.syslogWriter.Warning(message)
-			case LogNotice:
+			case LogDone, LogNotice:
 				err = logger.syslogWriter.Notice(message)
 			case LogInfo:
 				err = logger.syslogWriter.Info(message)
